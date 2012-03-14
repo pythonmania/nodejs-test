@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<gsf-conf>
+    <general pid-file="logs/daumuser.pid" />
+    <process max="1" min="1" spare="1" check-term="1000" />
+    <socket>
+        <tcp port="6700" reuse-addr="true" no-delay="true" linger="true" backlog="256"/>
+        <tcp monitor-port="6701" />
+    </socket>
+
+    <access-control>
+    	<!-- PI : 김태석, 도종훈, 임승철 -->
+		<allow-from> 192.168.64.64, 192.168.64.180, 192.168.64.146 </allow-from>
+		<!-- PI : 김수, 김동문, 황은경, 이승, 박충렬 -->
+		<allow-from> 192.168.64.192, 192.168.64.76, 192.168.2.206, 192.168.64.61, 192.168.2.190, 192.168.62.36, 192.168.64.144 </allow-from>
+
+		<!-- 이가영 -->
+		<allow-from> 192.168.13.198 </allow-from>
+
+		<!-- talkro, spamman -->
+        <allow-from> 10.10.250.181, 121.254.241.135, 211.32.117.28, 10.99.99.89 </allow-from>		
+
+		<!-- pi-userinfo-dev1, ucom-3 -->
+		<allow-from> 121.254.250.7, 211.32.117.77 </allow-from> 
+
+		<!-- pi-userinfo-app1 ~ 5 -->
+		<allow-from> 211.32.117.190, 222.231.50.148, 211.62.252.41, 211.62.252.43, 211.32.117.53 </allow-from>
+		
+	   	<!-- user-dev-web -->
+        <allow-from> 222.231.50.124 </allow-from>	    
+
+		<!-- nsori -->
+        <allow-from> 121.254.241.136 </allow-from>
+
+		<!--  event server -->
+        <allow-from> 116.125.140.71 </allow-from>
+
+		<allow-from> 121.254.241.136 </allow-from>
+		<allow-from> 211.32.117 </allow-from>
+		<allow-from> 222.231.50.148 </allow-from>
+		
+		<!-- pi-user-batch -->
+		<allow-from> 211.233.28.251 </allow-from>
+		
+		<allow-from> 10.10.251.29 </allow-from>
+		
+		<allow-from> 10.14.227.5, 110.45.227.147 </allow-from>
+		
+		<allow-from> 10.10.117 </allow-from>
+		
+		<!-- id-iuser-app01~10, id-nuser-app01~10, id-iuser-mid01, id-nuser-mid01 -->
+		<allow-from> 211.212.37.99, 211.212.37.115, 211.212.37.100, 211.212.37.116 </allow-from>
+		<allow-from> 211.212.37.101, 211.212.37.117, 211.212.37.102, 211.212.37.118 </allow-from>
+		<allow-from> 211.212.37.103, 211.212.37.119, 10.35.37.136, 110.45.225.52 </allow-from>
+		<allow-from> 110.45.225.85, 110.45.225.53, 110.45.225.86, 110.45.225.54 </allow-from>
+		<allow-from> 110.45.225.87, 110.45.225.55, 110.45.225.88, 110.45.225.56 </allow-from>
+		<allow-from> 110.45.225.89, 10.12.225.42, 110.45.227.5, 110.9.167.174 </allow-from>
+		<allow-from> 110.45.227.5, 110.9.167.174, 110.45.227.6, 110.9.167.175 </allow-from>
+
+		<!-- id-common-test -->
+		<allow-from> 192.168.62.12 </allow-from>
+				
+    </access-control>
+
+    <log use="true" buffer-size="4096" flush-interval="1000" ignore-debug="true" file="logs/daumuser.log"/>
+
+    <databases xmlns="dbpool.so" xmlns:SQL="dbpool.so; sql">
+
+	<!--dbpool id="daum2k" kind="OCI" connstr="!TCP:10.10.109.183:1521:ELEVEN">
+	<login user="daum2k_test" password="r0Ry/tDvnmMQs63Z4Rujbe2GpEkNmG7RDw==" /-->
+	<dbpool id="daum2k" kind="OCI" connstr="!RAC:GPRIV1DB1">
+	    <login user="daum2k" password="r0Ry/tDvnmMQs63Z4Rujbe2GpEkNmG7RDw==" />
+	    <size min="2" max="5" spare="1" />
+	    <monitor check-interval="300" max-check-interval="600000" max-idle-time="15000" />
+	    <statements hash-size="17" />
+	    <limits max-faults="20" exec-hard-limit="10000" acquire-timeout="10000"/>
+           
+            <?gsf-include uri="./conf/daumuser/find_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/find_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/modify_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/modify_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/support_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/support_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/join_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/join_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/privagree_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/privagree_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/checkidentity_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/checkidentity_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/admin_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/admin_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/snsauth_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/snsauth_select.cm"?>
+            
+            <SQL:MONITOR>
+            	select 1
+            	from dual
+            </SQL:MONITOR>
+
+        </dbpool>
+       
+        <dbpool id="userlog" kind="OCI" connstr="!TCP:10.255.255.166:1521:USERLOG2">
+            <login user="userlog" password="nLCeM/OVrgC5pFMRG/+wpFvI0VMy" />
+            <size min="2" max="5" spare="1" />
+            <monitor check-interval="300" max-check-interval="600000" max-idle-time="15000" />
+            <statements hash-size="17" />
+            <limits max-faults="20" exec-hard-limit="10000" acquire-timeout="10000"/>
+
+            <?gsf-include uri="./conf/daumuser/userlog_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/userlog_mod.cm"?>
+            <?gsf-include uri="./conf/daumuser/otp_select.cm"?> 
+            <?gsf-include uri="./conf/daumuser/otp_mod.cm"?> 
+
+        </dbpool>
+
+		<!-- CS TEST DB -->
+		<dbpool id="cs" kind="OCI" connstr="!TCP:10.10.250.186:1521:CS">
+		<!-- CS 서비스 DB -->
+		<!--dbpool id="cs" kind="OCI" connstr="!TCP:10.255.242.25:1521:dbset08"--> 
+		    <login user="csagent2" password="1ZsL5Dmqgjpl0iDxvrcnjm/N" />
+            <size min="2" max="5" spare="1" />
+            <monitor check-interval="300" max-check-interval="600000" max-idle-time="15000" />
+            <statements hash-size="17" />
+            <limits max-faults="20" exec-hard-limit="10000" acquire-timeout="10000"/>
+
+            <?gsf-include uri="./conf/daumuser/csagent_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/csagent_mod.cm"?>
+
+        </dbpool>
+		
+        <dbpool id="usersubdb" kind="MySQL" connstr="!TCP:10.10.229.84:3306:daum2k" charset="euckr">
+            <login user="daum2k" password="BbKVxpE/FrFcy7PlcNtAC5xZUlDE9ERQNA=="/>
+            
+            <size min="2" max="5" spare="1"/>
+            <monitor check-interval="300" max-check-interval="600000" max-idle-time="15000"/>
+            <statements hash-size="17" />
+            <limits max-faults="20" exec-hard-limit="10000" acquire-timeout="10000" ping-interval="60000" max-life-time="3600000"/>
+            
+            <?gsf-include uri="./conf/daumuser/userinfosub.cm"?>
+			
+        </dbpool>
+        
+        <dbpool id="geolocation" kind="MySQL" connstr="!TCP:10.10.155.167:3306:mine_test" charset="euckr">
+            <login user="mysqluser" password="nNiAu4anxF0aqhmhRAX9"/>
+            <size min="2" max="5" spare="1"/>
+            <monitor check-interval="300" max-check-interval="600000" max-idle-time="15000"/>
+            <statements hash-size="17" />
+            <limits max-faults="20" exec-hard-limit="10000" acquire-timeout="10000"/>
+
+            <?gsf-include uri="./conf/daumuser/geolocation_select.cm"?>
+            <?gsf-include uri="./conf/daumuser/geolocation_mod.cm"?>
+            
+        </dbpool>
+
+    </databases>
+
+    <thread-manager xmlns="bossworker.so">
+        <conn queue-size="4096" udppacket-maxlength="0" non-blocking="true" log-denied-addr="true"/>
+        <thread-pool xmlns="tpool.so; thread_pool"
+            max="200"
+            min="5"
+            spare="2"
+            check-interval="500"
+            cleanup-idle="60000"/>
+
+        <protocol-handler xmlns="modsanta.so"
+                xmlns:EXMOD="modsanta.so; santa_exmod"
+                xmlns:EXSANTA="modsanta.so; santa_exsanta">
+            <socket command-buffer-size="8192" max-command-length="20480000" timeout="10000"/>
+
+            <default-dbpool id="daum2k"/>
+            
+            <log received-sqlcmd="true" client-addr="true" />
+            <limits hold-connection="false"/>
+
+            <cache-filter xmlns="cachefilter.so; santa_cachefilter"
+                    cmdtable-hash-size="101">
+            </cache-filter>
+        </protocol-handler>
+    </thread-manager>
+</gsf-conf>
